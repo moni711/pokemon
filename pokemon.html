@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style type="text/css">
+		*{
+    padding:0;
+    margin:0;
+}
+.PokemonImgs{
+    width:70%;
+    height:90%;
+
+}
+.pokemon{
+    width:96px;
+        border: 2px solid black;
+    height:auto;
+}
+
+.Pokedex{
+    width: 20%;
+    height: 15%;
+    right: 0;
+    top: 5%;
+    margin-right: 10px;
+    border: 15px solid #252525;
+    border-radius: 10px;
+    position: fixed;
+    z-index: 0;
+    min-height: 355px;
+    min-width: 200px;
+    background-color: #252525;
+    
+}
+.PokedexDisplay{
+    width: 88%;
+    height: 60%;
+    bottom: -58px;
+    right: 1%;
+    /* border-radius: 10px 10px 10px 40px; */
+    margin: auto;
+    background: snow;
+    position: relative;
+    border: 1px solid black;
+    z-index: 1;
+    text-align: center;
+    font-size: calc(8px + .5vw);
+}
+.PokedexDisplay h3{
+    padding:0% 0 0 3% ;
+    font-weight: lighter;
+    text-align: left;
+    position: relative;
+    bottom:30px;
+}
+.PokedexDisplay h3:nth-of-type(2){
+    position: relative;
+    bottom:50px;
+}
+.PokedexList{
+    text-align: left;
+    margin-left:20%;
+    position: relative;
+    bottom:40px;
+}
+#PokedexHeight, #PokedexWeight{
+    text-align: left;
+    position: relative;
+    right:10%;
+    bottom:30px;
+}
+.PokedexDisplay h3:first-of-type{
+    padding:3% 3% 0 0 ;
+    font-weight: lighter;
+    text-align: right;
+    bottom:0px;
+}
+.PokedexDisplay img{
+    bottom:35px;
+    position: relative
+
+}
+
+	
+	</style>
+	<title></title>
+</head>
+<body>
+<html>
+    <head>
+        <title>Pokemon API Assignment</title>
+       
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+       
+    </head>
+
+    <body>
+        <div class="PokemonImgs">
+
+        </div>
+
+        <div class="Pokedex_copy"></div>
+
+        <div class="Pokedex">
+            
+           
+            
+            
+            <div class="PokedexDisplay">
+                <h3 id="PokemonName">ivysaur</h3>
+                <img class="PokedexImg" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png">
+                <h3>Types:</h3>
+                <ul class="PokedexList">
+                    <li>Grass</li>
+                    <li>Earth</li>
+                </ul>
+                <h3>Height:</h3>
+                <span id="PokedexHeight">5</span>
+                <h3>Weight:</h3>
+                <span id="PokedexWeight">60</span>
+            </div>
+
+          
+
+           
+        </div>
+    </body>
+
+</html>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+    var loading = false;
+
+    for(var i=1;i<=100;i++){
+
+        $('.PokemonImgs').append(`
+            <img class="pokemon" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/` + i + `.png"/>
+        `);
+        
+    }
+
+    if(loading){
+        setInterval(function(){
+            toggleLights();
+        },1000)
+    }
+
+    $('.pokemon').on('click',function(){
+        loading = true;
+        var id = $(this).attr('src');
+        id = id.split('/pokemon/');
+        id = id[1].split('.');
+        id = id[0];
+        
+        console.log(id);
+
+
+        $.get("https://pokeapi.co/api/v2/pokemon/" + id + "/", function(data, status){
+            console.log(status);
+            console.log(data);
+
+            if(status === "success"){
+                $('#PokemonName').text(data.name);
+                $('.PokedexImg').attr('src', data.sprites.front_default);
+                $('#PokedexHeight').text(data.height);
+                $('#PokedexWeight').text(data.weight);
+
+                $('.PokedexList').html("");
+                for(var x=0;x<data.types.length;x++){
+                    $('.PokedexList').append(`
+                        <li>`+ data.types[x].type.name +`</li>
+                    `);
+                }
+
+            }
+
+
+        }, "json");
+
+    });
+
+});
+
+
+</script>
+</body>
+</html>
